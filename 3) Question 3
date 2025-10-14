@@ -1,0 +1,105 @@
+Question 3) Write a program interleave the first half of the queue with second half.
+            Sample I/P: 4 7 11 20 5 9 Sample O/P: 4 20 7 5 11 9
+
+Answer 3)
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+class Queue {
+    int arr[SIZE];
+    int front, rear;
+
+public:
+    Queue() {
+        front = -1;
+        rear = -1;
+    }
+    int isEmpty() {
+        return (front == -1);
+    }
+    int isFull() {
+        return ((rear + 1) % SIZE == front);
+    }
+    void enqueue(int val) {
+        if (isFull()) {
+            cout << "Queue is Full!\n";
+            return;
+        }
+        if (front == -1)
+            front = 0;
+        rear = (rear + 1) % SIZE;
+        arr[rear] = val;
+    }
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is Empty!\n";
+            return -1;
+        }
+        int val = arr[front];
+        if (front == rear)
+            front = rear = -1;
+        else
+            front = (front + 1) % SIZE;
+        return val;
+    }
+    void interleave() {
+        int n = 0;
+        int temp[SIZE];
+        int i = front;
+
+        while (i != rear) {
+            temp[n++] = arr[i];
+            i = (i + 1) % SIZE;
+        }
+        temp[n++] = arr[rear];
+
+        if (n % 2 != 0) {
+            cout << "Queue has odd number of elements, cannot interleave evenly.\n";
+            return;
+        }
+
+        int half = n / 2;
+        cout << "Interleaved Queue: ";
+        for (int i = 0; i < half; i++) {
+            cout << temp[i] << " " << temp[i + half] << " ";
+        }
+        cout << endl;
+    }
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is Empty!\n";
+            return;
+        }
+        cout << "Queue: ";
+        int i = front;
+        while (i != rear) {
+            cout << arr[i] << " ";
+            i = (i + 1) % SIZE;
+        }
+        cout << arr[rear] << endl;
+    }
+};
+
+int main() {
+    Queue q;
+    int n, val;
+
+    cout << "Enter number of elements (even number): ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> val;
+        q.enqueue(val);
+    }
+
+    cout << "\nOriginal ";
+    q.display();
+
+    cout << endl;
+    q.interleave();
+
+    return 0;
+}
